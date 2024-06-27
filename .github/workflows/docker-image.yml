@@ -61,6 +61,6 @@ jobs:
       
       - name: Deploy to Netlify 🚀
         run: |
-          SITE_NAME="my-custom-site-name"  # Definiere deinen Site-Namen hier
+          SITE_NAME="my-custom-site-nametest"  # Definiere deinen Site-Namen hier
           netlify sites:create --name $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} || echo "Site already exists"
           netlify deploy --prod --dir=build --message "Automated deployment" --site $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
