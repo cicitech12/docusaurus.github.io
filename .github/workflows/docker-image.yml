@@ -70,3 +70,7 @@ jobs:
             SITE_ID=$(netlify sites:create --name $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} | grep 'Site ID:' | awk '{print $3}')
           fi
           echo "::set-output name=site_id::$SITE_ID"
+      
+      - name: Deploy to Netlify
+        run: netlify deploy --prod --dir=build --message "Automated deployment" --site ${{ steps.netlify-site.outputs.site_id }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        
