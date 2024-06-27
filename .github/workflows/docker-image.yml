@@ -58,11 +58,9 @@ jobs:
         run: |
           trivy image ghcr.io/${{ github.repository_owner }}/developer-platform:latest
       
+      
       - name: Deploy to Netlify 🚀
-        uses: data-intuitive/netlify-deploy-site@v1
-        with:
-          auth: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          site: 'my-netlify-site'
-          dir: '_site'
-          prod: true
-          message: 'Deploy production ${{ github.ref }}'
+        run: |
+          SITE_NAME="my-custom-site-name"  # Definiere deinen Site-Namen hier
+          netlify sites:create --name $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} || echo "Site already exists"
+          netlify deploy --prod --dir=build --message "Automated deployment" --site $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
