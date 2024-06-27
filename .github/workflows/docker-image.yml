@@ -68,6 +68,4 @@ jobs:
             .cache
             public
           production: true
-          cache-strategy: npm
-          install-command: npm install --production
-          build-command: npm run build
+         
