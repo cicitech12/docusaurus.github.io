@@ -63,4 +63,4 @@ jobs:
         with:
             NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
             NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-            NETLIFY_DEPLOY_MESSAGE: "Deploy from GitHub Actions"
+            NETLIFY_DEPLOY_MESSAGE: "Deploy from GitHub Actions v${{ github.ref }}"
