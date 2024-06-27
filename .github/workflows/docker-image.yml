@@ -58,9 +58,15 @@ jobs:
         run: |
           trivy image ghcr.io/${{ github.repository_owner }}/developer-platform:latest
       
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
       
-      - name: Deploy to Netlify 🚀
+      - name: Create or Get Netlify Site ID
+        id: netlify-site-testing
         run: |
-          SITE_NAME="my-custom-site-nametest"  # Definiere deinen Site-Namen hier
-          netlify sites:create --name $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} || echo "Site already exists"
-          netlify deploy --prod --dir=build --message "Automated deployment" --site $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SITE_NAME="my-custom-site-name"  # Definiere deinen Site-Namen hier
+          SITE_ID=$(netlify sites:list | grep $SITE_NAME | awk '{print $1}')
+          if [ -z "$SITE_ID" ]; then
+            SITE_ID=$(netlify sites:create --name $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} | grep 'Site ID:' | awk '{print $3}')
+          fi
+          echo "::set-output name=site_id::$SITE_ID"
