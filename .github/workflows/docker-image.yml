@@ -58,19 +58,26 @@ jobs:
         run: |
           trivy image ghcr.io/${{ github.repository_owner }}/developer-platform:latest
       
-      - name: Install Netlify CLI
-        run: npm install -g netlify-cli
-      
-      - name: Create or Get Netlify Site ID
-        id: netlify-site-testing
+          name: Install Netlify CLI
+          run: npm install -g netlify-cli
+  
+      - name: Authenticate with Netlify
         run: |
-          SITE_NAME="my-custom-site-name"  # Definiere deinen Site-Namen hier
-          SITE_ID=$(netlify sites:list | grep $SITE_NAME | awk '{print $1}')
+          netlify login --auth ${{ secrets.NETLIFY_CLIENT_ID }}:${{ secrets.NETLIFY_CLIENT_SECRET }}
+
+      - name: Create or Get Netlify Site ID
+        id: netlify-site
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          SITE_NAME="my-custom-site-cici"  # Definiere deinen Site-Namen hier
+          SITE_ID=$(netlify sites:list --json --auth $NETLIFY_AUTH_TOKEN | jq -r --arg SITE_NAME "$SITE_NAME" '.[] | select(.name == $SITE_NAME) | .id')
           if [ -z "$SITE_ID" ]; then
-            SITE_ID=$(netlify sites:create --name $SITE_NAME --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} | grep 'Site ID:' | awk '{print $3}')
+            SITE_ID=$(netlify sites:create --name $SITE_NAME --auth $NETLIFY_AUTH_TOKEN --json | jq -r '.site_id')
           fi
           echo "::set-output name=site_id::$SITE_ID"
-      
+
       - name: Deploy to Netlify
-        run: netlify deploy --prod --dir=build --message "Automated deployment" --site ${{ steps.netlify-site.outputs.site_id }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: netlify deploy --prod --dir=build --message "Automated deployment" --site ${{ steps.netlify-site.outputs.site_id }} --auth $NETLIFY_AUTH_TOKEN
