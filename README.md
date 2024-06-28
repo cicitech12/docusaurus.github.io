@@ -40,7 +40,7 @@ In case of already having the deployment ready data - we can easily skip the nvm
 
 ```
 - name: Deploy to Netlify
-  uses: cchitsiang/netlify-deploy-action@main
+  uses: jsmrcaga/action-netlify-deploy@v2.0.0
   with:
     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
