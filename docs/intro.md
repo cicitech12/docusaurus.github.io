@@ -76,4 +76,4 @@ Our platform is backed by a vibrant community of developers who share knowledge,
 
 Ready to start using our platform? Check out our [documentation](./docs/intro) to learn more about getting started, or jump right in by following our [quick start guide](./docs/intro). Join our community of developers and start building amazing applications today!
 
-For more information or support, feel free to reach out to our team at [support@yourcompany.com](mailto:support@yourcompany.com).
+For more information or support, feel free to reach out to our team at [support@cicitech.at](mailto:support@cicitech.at).
