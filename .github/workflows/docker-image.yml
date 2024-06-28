@@ -69,7 +69,7 @@ jobs:
   
       - name: Add a comment to the pull request
         if: always()
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           script: |
             const { GITHUB_SHA } = process.env;
