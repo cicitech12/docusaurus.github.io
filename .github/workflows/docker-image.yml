@@ -58,10 +58,25 @@ jobs:
         run: |
           trivy image ghcr.io/${{ github.repository_owner }}/developer-platform:latest
       
-      - name: Deploy to Netlify ✨
-        uses: jsmrcaga/action-netlify-deploy@v2.2.0
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.2.0
         with:
-            NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-            NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-            NETLIFY_DEPLOY_MESSAGE: "Deploy from GitHub Actions - Commit ${{ github.workflow_sha }} pushed by ${{ github.actor }}"
-            NETLIFY_DEPLOY_TO_PROD: true
+          publish-dir: './public'
+          production-deploy: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  
+      - name: Add a comment to the pull request
+        if: always()
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { GITHUB_SHA } = process.env;
+            const deploymentUrl = `https://app.netlify.com/sites/${process.env.NETLIFY_SITE_NAME}/deploys/${GITHUB_SHA}`;
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Netlify Preview Deployment Information\n\n- [Log URL](${deploymentUrl})`
+            });
